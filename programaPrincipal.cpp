@@ -17,6 +17,7 @@ void limparTela();
 void menuImpressao(fstream& arquivo);
 void imprimir(dados aux);
 void menu();
+void edicao(fstream& arquivo);
 
 const string nomeArquivo = "arquivoBinario.dat";
 
@@ -37,9 +38,13 @@ int main() {
             case 1:
                 menuImpressao(arquivo);
                 break;
+            case 2:
+                edicao(arquivo);
+                break;
             default:
                 break;
         }
+
     } while (opcao != 0);
 
     arquivo.close();
@@ -64,6 +69,7 @@ void menu() {
     limparTela();
     cout << "=============== Programa ================\n";
     cout << "\n[1] Imprimir";
+    cout << "\n[2] Editar um registro em uma posicao específica";
     cout << "\n[0] Sair";
     cout << "\n\nDigite uma OPÇÃO e pressione ENTER: ";
 }
@@ -81,7 +87,7 @@ void menuImpressao(fstream& arquivo) {
     cin >> opcao;
 
     if (opcao) {
-         while (arquivo.read((char*)(&aux), sizeof(dados))) {
+        while (arquivo.read((char*)(&aux), sizeof(dados))) {
             imprimir(aux);
         }
     } else {
@@ -95,6 +101,7 @@ void menuImpressao(fstream& arquivo) {
         cin >> indiceFinal;
         cout << "\n";
 
+        arquivo.seekg(indiceInicio * sizeof(dados));
         while (arquivo.read((char*)(&aux), sizeof(dados))) {
             cont++;
 
@@ -108,4 +115,50 @@ void menuImpressao(fstream& arquivo) {
     cout << "\nDigite qualquer coisa para voltar ao menu: ";
     cin.ignore();
     getline(cin, buffer);
+    arquivo.clear();
+}
+
+void edicao(fstream& arquivo) {
+    string buffer;
+    int posicao;
+    dados aux;
+
+    limparTela();
+
+    cout << "Digite a posicao do registro que voce deseja editar: ";
+    cin >> posicao;
+
+    arquivo.seekp(posicao * sizeof(dados));
+
+    cout << "measure: ";
+    cin >> aux.measure;
+
+    cout << "quantile: ";
+    cin >> aux.quantile;
+
+    cout << "area: ";
+    cin >> aux.area;
+
+    cout << "sex: ";
+    cin >> aux.sex;
+
+    cout << "age: ";
+    cin >> aux.age;
+
+    cout << "geography: ";
+    cin >> aux.geography;
+
+    cout << "ethnic: ";
+    cin >> aux.ethnic;
+
+    cout << "value: ";
+    cin >> aux.value;
+
+    arquivo.write((char*)(&aux), sizeof(dados));
+
+
+    cout << "\nDigite qualquer coisa para voltar ao menu: ";
+    cin.ignore();
+    getline(cin, buffer);
+    arquivo.clear();
 }
