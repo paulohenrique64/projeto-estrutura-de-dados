@@ -8,7 +8,7 @@
 #include <cstring>
 using namespace std;
 
-const string nomeArquivoCsv = "database.csv";
+const string nomeArquivoCsv = "Subnational-period-life-tables-2017-2019-CSV.csv";
 
 struct dados {
     char measure[2];   
@@ -59,7 +59,7 @@ int main() {
         aux.value = stod(palavras[7]);
 
         // escrever struct lida no arquivo binario
-        arquivoBinario.write(reinterpret_cast<const char*>(&aux), sizeof(dados));
+        arquivoBinario.write(reinterpret_cast<char*>(&aux), sizeof(dados));
 
         qtdStructsLidas++;
     }

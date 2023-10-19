@@ -1,6 +1,12 @@
+/*
+    Programa para manipular um arquivo binario específico que contem muitos registros.
+*/
+
 #include <iostream>
 #include <fstream>
 using namespace std;
+
+const string nomeArquivo = "arquivoBinario.dat";
 
 struct dados {
     char measure[2];   
@@ -14,13 +20,11 @@ struct dados {
 };
 
 void limparTela();
-void menuImpressao(fstream& arquivo);
 void imprimir(dados aux);
 void menu();
 void edicao(fstream& arquivo);
 void trocarDePosicao(fstream& arquivo);
-
-const string nomeArquivo = "arquivoBinario.dat";
+void menuImpressao(fstream& arquivo);
 
 int main() {
     fstream arquivo(nomeArquivo, ios::in | ios::out | ios::binary);
@@ -48,10 +52,10 @@ int main() {
             default:
                 break;
         }
-
     } while (opcao != 0);
 
     arquivo.close();
+    return 0;
 }
 
 void imprimir(dados aux) {
@@ -66,13 +70,13 @@ void imprimir(dados aux) {
 }
 
 void limparTela() {
-    system("cls | clear");
+    system("clear || cls");
 }
 
 void menu() {
     limparTela();
-    cout << "=============== Programa ================\n";
-    cout << "\n[1] Imprimir";
+    cout << "=============== Menu ================\n";
+    cout << "\n[1] Menu para impressão dos registros";
     cout << "\n[2] Editar um registro em uma posicao específica";
     cout << "\n[3] Trocar registros de posicao";
     cout << "\n[0] Sair";
@@ -92,11 +96,14 @@ void menuImpressao(fstream& arquivo) {
     cin >> opcao;
 
     if (opcao) {
+        // posiciona o cursor de leitura no inicio do arquivo binario
+        arquivo.seekg(0, arquivo.beg);
+
         while (arquivo.read((char*)(&aux), sizeof(dados))) {
             imprimir(aux);
         }
     } else {
-        int indiceInicio, indiceFinal, cont = 0;
+        int indiceInicio, indiceFinal, indiceAtual;
 
         limparTela();
         cout << "Informe o indice inicial: ";
@@ -104,18 +111,20 @@ void menuImpressao(fstream& arquivo) {
 
         cout << "Informe o indice final: ";
         cin >> indiceFinal;
+        indiceAtual = indiceInicio;
         cout << "\n";
 
+        // posiciona o cursor de leitura no indice inicial escolhido pelo usuario
         arquivo.seekg(indiceInicio * sizeof(dados));
-        while (arquivo.read((char*)(&aux), sizeof(dados))) {
-            cont++;
 
-            if (cont >= indiceInicio and cont <= indiceFinal)  {
+        while (arquivo.read((char*)(&aux), sizeof(dados))) {
+            if (indiceAtual >= indiceInicio and indiceAtual <= indiceFinal)  {
                 imprimir(aux);
             }
+
+            indiceAtual++;
         }
     }
-
 
     cout << "\nDigite qualquer coisa para voltar ao menu: ";
     cin.ignore();
@@ -133,6 +142,7 @@ void edicao(fstream& arquivo) {
     cout << "Digite a posicao do registro que voce deseja editar: ";
     cin >> posicao;
 
+    // posiciona o cursor de escrita na posição do registro a ser editado
     arquivo.seekp(posicao * sizeof(dados));
 
     cout << "measure: ";
@@ -160,7 +170,6 @@ void edicao(fstream& arquivo) {
     cin >> aux.value;
 
     arquivo.write((char*)(&aux), sizeof(dados));
-
 
     cout << "\nDigite qualquer coisa para voltar ao menu: ";
     cin.ignore();
