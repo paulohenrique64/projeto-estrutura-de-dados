@@ -180,11 +180,13 @@ void edicao(fstream& arquivo) {
 void trocarDePosicao(fstream& arquivo) {
     int posicao1, posicao2;
     dados registro1, registro2;
+    string buffer;
     
+    limparTela();
     cout << "Digite as posicoes dos registros que deseja trocar:\n";
-    cout << "primeira posicao:";
+    cout << "Primeira posicao:";
     cin >> posicao1;
-    cout << "\nsegunda posicao:";
+    cout << "Segunda posicao:";
     cin >> posicao2;
 
     if((posicao1 < 0) or (posicao2 < 0)) {
@@ -205,6 +207,10 @@ void trocarDePosicao(fstream& arquivo) {
     arquivo.seekp(posicao2 * sizeof(dados));
     arquivo.write((char*)(&registro1), sizeof(dados));
 
+    cout << "\nTroca efetuada com sucesso!";
+    cout << "\nDigite qualquer coisa para voltar ao menu: ";
+    cin.ignore();
+    getline(cin, buffer);
     arquivo.clear();
 
 }
