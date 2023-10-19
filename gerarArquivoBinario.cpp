@@ -8,7 +8,7 @@
 #include <cstring>
 using namespace std;
 
-const string nomeArquivoCsv = "Subnational-period-life-tables-2017-2019-CSV.csv";
+const string nomeArquivoCsv = "database.csv";
 
 struct dados {
     char measure[2];   
