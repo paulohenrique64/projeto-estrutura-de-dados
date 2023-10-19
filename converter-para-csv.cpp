@@ -58,7 +58,7 @@ int main() {
     arquivoCsv.close();
     return 0;
 }
-
+//otarios
 void imprimir(dados aux) {
     cout << aux.measure << " " 
         << aux.quantile << " " 
