@@ -18,6 +18,7 @@ void menuImpressao(fstream& arquivo);
 void imprimir(dados aux);
 void menu();
 void edicao(fstream& arquivo);
+void trocarDePosicao(fstream& arquivo);
 
 const string nomeArquivo = "arquivoBinario.dat";
 
@@ -40,6 +41,9 @@ int main() {
                 break;
             case 2:
                 edicao(arquivo);
+                break;
+            case 3:
+                trocarDePosicao(arquivo);
                 break;
             default:
                 break;
@@ -70,6 +74,7 @@ void menu() {
     cout << "=============== Programa ================\n";
     cout << "\n[1] Imprimir";
     cout << "\n[2] Editar um registro em uma posicao específica";
+    cout << "\n[3] Trocar registros de posicao";
     cout << "\n[0] Sair";
     cout << "\n\nDigite uma OPÇÃO e pressione ENTER: ";
 }
@@ -161,4 +166,36 @@ void edicao(fstream& arquivo) {
     cin.ignore();
     getline(cin, buffer);
     arquivo.clear();
+}
+
+void trocarDePosicao(fstream& arquivo) {
+    int posicao1, posicao2;
+    dados registro1, registro2;
+    
+    cout << "Digite as posicoes dos registros que deseja trocar:\n";
+    cout << "primeira posicao:";
+    cin >> posicao1;
+    cout << "\nsegunda posicao:";
+    cin >> posicao2;
+
+    if((posicao1 < 0) or (posicao2 < 0)) {
+        cerr << "Posições Invalidas!\n";
+    }
+
+    
+
+    arquivo.seekg(posicao1 * sizeof(dados));
+    arquivo.read((char*)(&registro1),sizeof(dados));
+
+    arquivo.seekg(posicao2 * sizeof(dados));
+    arquivo.read((char*)(&registro2),sizeof(dados));
+
+    arquivo.seekp(posicao1 * sizeof(dados));
+    arquivo.write((char*)(&registro2), sizeof(dados));
+
+    arquivo.seekp(posicao2 * sizeof(dados));
+    arquivo.write((char*)(&registro1), sizeof(dados));
+
+    arquivo.clear();
+
 }
