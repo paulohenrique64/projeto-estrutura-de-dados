@@ -60,6 +60,7 @@ int main() {
 }
 
 // modificado
+//teste__
 void imprimir(dados aux) {
     cout << aux.measure << " " 
         << aux.quantile << " " 
