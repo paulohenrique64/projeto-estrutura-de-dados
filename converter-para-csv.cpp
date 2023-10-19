@@ -21,6 +21,7 @@ void imprimir(dados aux);
 
 int main() {
     ifstream arquivoCsv(nomeArquivo);
+    ofstream arquivoBinario("arquivoBinario.dat", ios::binary);
     string cabecalho, linha, palavras[8];
     stringstream buffer;
     dados aux;
@@ -28,6 +29,7 @@ int main() {
     // cabecalho
     getline(arquivoCsv, cabecalho);
 
+    int cont = 0;
     while (getline(arquivoCsv, linha)) {
         buffer << linha;
         
@@ -48,19 +50,23 @@ int main() {
         strcpy(aux.sex, palavras[3].c_str());
         strcpy(aux.age, palavras[4].c_str());
         strcpy(aux.geography, palavras[5].c_str());
-        strcpy(aux.measure, palavras[6].c_str());
-        strcpy(aux.ethnic, palavras[7].c_str());
+        strcpy(aux.ethnic, palavras[6].c_str());
         aux.value = stoi(palavras[7]);
 
-        imprimir(aux);
+        //imprimir(aux);
+        arquivoBinario.write(reinterpret_cast<const char*>(&aux), sizeof(dados));
+
+        cont++;
     }
 
     arquivoCsv.close();
+    arquivoBinario.close();
+    
+    cout << cont << endl;
+
     return 0;
 }
 
-// modificado
-//teste__
 void imprimir(dados aux) {
     cout << aux.measure << " " 
         << aux.quantile << " " 
