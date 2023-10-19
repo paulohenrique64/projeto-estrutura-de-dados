@@ -24,6 +24,7 @@ void imprimir(dados aux);
 void menu();
 void edicao(fstream& arquivo);
 void menuImpressao(fstream& arquivo);
+void insercao(fstream& arquivo);
 
 int main() {
     fstream arquivo(nomeArquivo, ios::in | ios::out | ios::binary);
@@ -44,6 +45,9 @@ int main() {
                 break;
             case 2:
                 edicao(arquivo);
+                break;
+            case 4:
+                insercao(arquivo);
                 break;
             default:
                 break;
@@ -74,6 +78,7 @@ void menu() {
     cout << "=============== Menu ================\n";
     cout << "\n[1] Menu para impressão dos registros";
     cout << "\n[2] Editar um registro em uma posicao específica";
+    cout << "\n[4] Inserir um registro em uma posicao específica";
     cout << "\n[0] Sair";
     cout << "\n\nDigite uma OPÇÃO e pressione ENTER: ";
 }
@@ -170,4 +175,62 @@ void edicao(fstream& arquivo) {
     cin.ignore();
     getline(cin, buffer);
     arquivo.clear();
+}
+
+void insercao(fstream& arquivo) {
+    dados aux;
+    string buffer;
+    int posicao;
+
+    cout << "Digite a posicao do registro que voce deseja editar: ";
+    cin >> posicao;
+
+    cout << "Digite os dados do seu novo registro\n";
+    cout << "measure: ";
+    cin >> aux.measure;
+
+    cout << "quantile: ";
+    cin >> aux.quantile;
+
+    cout << "area: ";
+    cin >> aux.area;
+
+    cout << "sex: ";
+    cin >> aux.sex;
+
+    cout << "age: ";
+    cin >> aux.age;
+
+    cout << "geography: ";
+    cin >> aux.geography;
+
+    cout << "ethnic: ";
+    cin >> aux.ethnic;
+
+    cout << "value: ";
+    cin >> aux.value;
+
+    //movendo o cursor para a posicao desejada
+    arquivo.seekg(posicao * sizeof(dados));
+    //le o resto do arquivo
+    streampos tamanhoArquivo = arquivo.tellg();
+    arquivo.seekg(0, ios::end);
+    tamanhoArquivo = arquivo.tellg() - tamanhoArquivo;
+    char* arquivoRestante = new char[tamanhoArquivo];
+    arquivo.read(arquivoRestante, tamanhoArquivo);
+
+    //voltando para a posicao atualizada e escrevendo o proximo elemento
+    arquivo.seekp(posicao * sizeof(dados));
+    arquivo.write((char*)(&aux), sizeof(dados));
+    //escrevendo novamente com deslocamento de 1
+    arquivo.write(arquivoRestante, tamanhoArquivo);
+
+    delete [] arquivoRestante;
+    arquivo.clear();
+
+    cout << "Elemento adicionado com sucesso!" << endl;
+
+    cout << "\nDigite qualquer coisa para voltar ao menu: ";
+    cin.ignore();
+    getline(cin, buffer);
 }
