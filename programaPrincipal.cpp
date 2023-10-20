@@ -23,6 +23,7 @@ void limparTela();
 void imprimir(dados aux);
 void menu();
 void edicao(fstream& arquivo);
+void trocarDePosicao(fstream& arquivo);
 void menuImpressao(fstream& arquivo);
 void insercao(fstream& arquivo);
 
@@ -48,6 +49,9 @@ int main() {
                 break;
             case 4:
                 insercao(arquivo);
+                break;
+            case 3:
+                trocarDePosicao(arquivo);
                 break;
             default:
                 break;
@@ -79,6 +83,7 @@ void menu() {
     cout << "\n[1] Menu para impressão dos registros";
     cout << "\n[2] Editar um registro em uma posicao específica";
     cout << "\n[4] Inserir um registro em uma posicao específica";
+    cout << "\n[3] Trocar registros de posicao";
     cout << "\n[0] Sair";
     cout << "\n\nDigite uma OPÇÃO e pressione ENTER: ";
 }
@@ -233,4 +238,42 @@ void insercao(fstream& arquivo) {
     cout << "\nDigite qualquer coisa para voltar ao menu: ";
     cin.ignore();
     getline(cin, buffer);
+}
+
+void trocarDePosicao(fstream& arquivo) {
+    int posicao1, posicao2;
+    dados registro1, registro2;
+    string buffer;
+    
+    limparTela();
+    cout << "Digite as posicoes dos registros que deseja trocar:\n";
+    cout << "Primeira posicao:";
+    cin >> posicao1;
+    cout << "Segunda posicao:";
+    cin >> posicao2;
+
+    if((posicao1 < 0) or (posicao2 < 0)) {
+        cerr << "Posições Invalidas!\n";
+    }
+
+    
+
+    arquivo.seekg(posicao1 * sizeof(dados));
+    arquivo.read((char*)(&registro1),sizeof(dados));
+
+    arquivo.seekg(posicao2 * sizeof(dados));
+    arquivo.read((char*)(&registro2),sizeof(dados));
+
+    arquivo.seekp(posicao1 * sizeof(dados));
+    arquivo.write((char*)(&registro2), sizeof(dados));
+
+    arquivo.seekp(posicao2 * sizeof(dados));
+    arquivo.write((char*)(&registro1), sizeof(dados));
+
+    cout << "\nTroca efetuada com sucesso!";
+    cout << "\nDigite qualquer coisa para voltar ao menu: ";
+    cin.ignore();
+    getline(cin, buffer);
+    arquivo.clear();
+
 }
