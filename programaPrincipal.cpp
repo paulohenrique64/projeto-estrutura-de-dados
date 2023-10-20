@@ -47,11 +47,11 @@ int main() {
             case 2:
                 edicao(arquivo);
                 break;
-            case 4:
-                insercao(arquivo);
-                break;
             case 3:
                 trocarDePosicao(arquivo);
+                break;
+            case 4:
+                insercao(arquivo);
                 break;
             default:
                 break;
@@ -82,8 +82,8 @@ void menu() {
     cout << "=============== Menu ================\n";
     cout << "\n[1] Menu para impressão dos registros";
     cout << "\n[2] Editar um registro em uma posicao específica";
-    cout << "\n[4] Inserir um registro em uma posicao específica";
     cout << "\n[3] Trocar registros de posicao";
+    cout << "\n[4] Inserir um registro em uma posicao específica";
     cout << "\n[0] Sair";
     cout << "\n\nDigite uma OPÇÃO e pressione ENTER: ";
 }
