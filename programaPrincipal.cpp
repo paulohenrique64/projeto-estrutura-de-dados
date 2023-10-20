@@ -183,7 +183,7 @@ void edicao(fstream& arquivo) {
 }
 
 void insercao(fstream& arquivo) {
-    dados aux;
+    dados novo, aux;
     string buffer;
     int posicao;
 
@@ -192,46 +192,66 @@ void insercao(fstream& arquivo) {
 
     cout << "Digite os dados do seu novo registro\n";
     cout << "measure: ";
-    cin >> aux.measure;
+    cin >> novo.measure;
 
     cout << "quantile: ";
-    cin >> aux.quantile;
+    cin >> novo.quantile;
 
     cout << "area: ";
-    cin >> aux.area;
+    cin >> novo.area;
 
     cout << "sex: ";
-    cin >> aux.sex;
+    cin >> novo.sex;
 
     cout << "age: ";
-    cin >> aux.age;
+    cin >> novo.age;
 
     cout << "geography: ";
-    cin >> aux.geography;
+    cin >> novo.geography;
 
     cout << "ethnic: ";
-    cin >> aux.ethnic;
+    cin >> novo.ethnic;
 
     cout << "value: ";
-    cin >> aux.value;
+    cin >> novo.value;
 
-    //movendo o cursor para a posicao desejada
+    arquivo.seekg(0, arquivo.end); // Posiciona para leitura no final
+    long int tamanho_bytes = arquivo.tellg(); // Conta os bytes
+    int tamanho = static_cast<int>(tamanho_bytes / sizeof(dados));
+
+    // Mova do último elemento até a posição desejada
+    for (int i = tamanho - 1; i >= posicao; i--) {
+        arquivo.seekg(i * sizeof(dados));
+        arquivo.read(reinterpret_cast<char*>(&aux), sizeof(dados));
+        arquivo.seekp((i + 1) * sizeof(dados));
+        arquivo.write(reinterpret_cast<char*>(&aux), sizeof(dados));
+    }
+
+    // Mova o cursor para a posição desejada e escreva o novo elemento
+    arquivo.seekp(posicao * sizeof(dados));
+    arquivo.write(reinterpret_cast<char*>(&novo), sizeof(dados));
+
+    arquivo.clear();
+    
+    /*//movendo o cursor para a posicao desejada
     arquivo.seekg(posicao * sizeof(dados));
     //le o resto do arquivo
     streampos tamanhoArquivo = arquivo.tellg();
     arquivo.seekg(0, ios::end);
     tamanhoArquivo = arquivo.tellg() - tamanhoArquivo;
     char* arquivoRestante = new char[tamanhoArquivo];
+    arquivo.seekg(posicao * sizeof(dados));
     arquivo.read(arquivoRestante, tamanhoArquivo);
 
     //voltando para a posicao atualizada e escrevendo o proximo elemento
     arquivo.seekp(posicao * sizeof(dados));
     arquivo.write((char*)(&aux), sizeof(dados));
     //escrevendo novamente com deslocamento de 1
+    arquivo.seekp((posicao+1) * sizeof(dados));
     arquivo.write(arquivoRestante, tamanhoArquivo);
 
     delete [] arquivoRestante;
-    arquivo.clear();
+    arquivo.clear();*/
 
     cout << "Elemento adicionado com sucesso!" << endl;
 
