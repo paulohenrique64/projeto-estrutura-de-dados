@@ -1,5 +1,11 @@
 /*
-    Programa para manipular um arquivo binario específico que contem muitos registros.
+    Programa para manipular o arquivo binário arquivoBinario.dat, contendo um menu para 
+    funções de adição, impressão e edição dos registros"
+
+    Alunos: Paulo Henrique dos Anjos Silveira,
+    Paulo Henrique Ribeiro Alves e Thiago Ferreira Azevedo
+
+    Universidade Federal de Lavras, 23/10/2023
 */
 
 #include <iostream>
@@ -9,13 +15,13 @@ using namespace std;
 const string nomeArquivo = "arquivoBinario.dat";
 
 struct dados {
-    char measure[2];   
+    char measure[4];   
     double quantile;   
-    char area[42];     
-    char sex[6];       
-    char age[17];      
-    char geography[46];
-    char ethnic[8];    
+    char area[44];     
+    char sex[8];       
+    char age[18];      
+    char geography[48];
+    char ethnic[10];    
     double value;      
 };
 
@@ -64,7 +70,7 @@ int main() {
 
 void imprimir(dados aux) {
     cout << aux.measure << " " 
-        << aux.quantile << " " 
+        << aux.quantile << "% " 
         << aux.area << " " 
         << aux.sex << " " 
         << aux.age << " " 
@@ -101,6 +107,8 @@ void menuImpressao(fstream& arquivo) {
     cin >> opcao;
 
     if (opcao) {
+        cout << "measure, quantile, area, sex, age, geography, ethnic, value\n\n";
+        
         // posiciona o cursor de leitura no inicio do arquivo binario
         arquivo.seekg(0, arquivo.beg);
 
@@ -111,6 +119,7 @@ void menuImpressao(fstream& arquivo) {
         int indiceInicio, indiceFinal, indiceAtual;
 
         limparTela();
+        
         cout << "Informe o indice inicial: ";
         cin >> indiceInicio;
 
@@ -118,6 +127,8 @@ void menuImpressao(fstream& arquivo) {
         cin >> indiceFinal;
         indiceAtual = indiceInicio;
         cout << "\n";
+
+        cout << "measure, quantile, area, sex, age, geography, ethnic, value\n\n";
 
         // posiciona o cursor de leitura no indice inicial escolhido pelo usuario
         arquivo.seekg(indiceInicio * sizeof(dados));

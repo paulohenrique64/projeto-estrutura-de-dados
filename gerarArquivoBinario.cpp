@@ -1,5 +1,10 @@
 /*
-    Conversor de um arquivo CSV específico para o formato binário (.dat).
+    Programa para converter o arquivo Subnational..CSV.csv para o formato binário (.dat)"
+
+    Alunos: Paulo Henrique dos Anjos Silveira,
+    Paulo Henrique Ribeiro Alves e Thiago Ferreira Azevedo
+
+    Universidade Federal de Lavras, 23/10/2023
 */
 
 #include <iostream>
@@ -11,13 +16,13 @@ using namespace std;
 const string nomeArquivoCsv = "Subnational-period-life-tables-2017-2019-CSV.csv";
 
 struct dados {
-    char measure[2];   
+    char measure[4];   
     double quantile;   
-    char area[42];     
-    char sex[6];       
-    char age[17];      
-    char geography[46];
-    char ethnic[8];    
+    char area[44];     
+    char sex[8];       
+    char age[18];      
+    char geography[48];
+    char ethnic[10];    
     double value;      
 };
 
