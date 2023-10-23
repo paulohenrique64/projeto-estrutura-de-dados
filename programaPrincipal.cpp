@@ -26,17 +26,21 @@ struct dados {
 };
 
 void limparTela();
-void imprimir(dados aux);
 void menu();
-void edicao(fstream& arquivo);
-void trocarDePosicao(fstream& arquivo);
-void menuImpressao(fstream& arquivo);
-void insercao(fstream& arquivo);
+void voltarAoMenu();
+void imprimir(dados aux);
+int quantidadeRegistros(fstream& arquivo);
+void edicao(fstream& arquivo, int& qtdRegistros);
+void trocarDePosicao(fstream& arquivo, int& qtdRegistros);
+void menuImpressao(fstream& arquivo, int& qtdRegistros);
+void insercao(fstream& arquivo, int& qtdRegistros);
+
 
 int main() {
     fstream arquivo(nomeArquivo, ios::in | ios::out | ios::binary);
     int opcao;
-    
+    int qtdRegistros = quantidadeRegistros(arquivo);
+  
     if (not arquivo.is_open()) {
         cerr << "Não foi possível abrir o arquivo!" << endl;
         exit(EXIT_FAILURE);
@@ -48,16 +52,16 @@ int main() {
 
         switch (opcao) {
             case 1:
-                menuImpressao(arquivo);
+                menuImpressao(arquivo, qtdRegistros);
                 break;
             case 2:
-                edicao(arquivo);
+                edicao(arquivo, qtdRegistros);
                 break;
             case 3:
-                trocarDePosicao(arquivo);
+                trocarDePosicao(arquivo, qtdRegistros);
                 break;
             case 4:
-                insercao(arquivo);
+                insercao(arquivo, qtdRegistros);
                 break;
             default:
                 break;
@@ -69,14 +73,15 @@ int main() {
 }
 
 void imprimir(dados aux) {
-    cout << aux.measure << " " 
-        << aux.quantile << "% " 
-        << aux.area << " " 
-        << aux.sex << " " 
-        << aux.age << " " 
-        << aux.geography << " " 
-        << aux.ethnic << " "
-        << aux.value << endl;
+    cout << "  Measure: " << aux.measure << endl
+        << " Quantile: " << aux.quantile << "%" << endl
+        << "     Area: " << aux.area << endl
+        << "      Sex: " << aux.sex << endl
+        << "      Age: " << aux.age << endl
+        << "Geography: " << aux.geography << endl
+        << "   Ethnic: " << aux.ethnic << endl
+        << "    Value: " << aux.value << endl;
+    cout << "===========================================================" << endl;
 }
 
 void limparTela() {
@@ -94,7 +99,19 @@ void menu() {
     cout << "\n\nDigite uma OPÇÃO e pressione ENTER: ";
 }
 
-void menuImpressao(fstream& arquivo) {
+void voltarAoMenu() {
+    string buffer;
+    cout << "\nDigite qualquer coisa para voltar ao menu: ";
+    cin.ignore();
+    getline(cin, buffer);
+}
+
+int quantidadeRegistros(fstream& arquivo) {
+    arquivo.seekg(0, ios_base::end);
+    return arquivo.tellg() / sizeof(dados);
+}
+
+void menuImpressao(fstream& arquivo, int& qtdRegistros) {
     dados aux;
     string buffer;
     int opcao;
@@ -107,8 +124,6 @@ void menuImpressao(fstream& arquivo) {
     cin >> opcao;
 
     if (opcao) {
-        cout << "measure, quantile, area, sex, age, geography, ethnic, value\n\n";
-        
         // posiciona o cursor de leitura no inicio do arquivo binario
         arquivo.seekg(0, arquivo.beg);
 
@@ -119,16 +134,25 @@ void menuImpressao(fstream& arquivo) {
         int indiceInicio, indiceFinal, indiceAtual;
 
         limparTela();
-        
+
+        cout << "Quantidade de registros disponíveis: " << qtdRegistros << "\n\n";
         cout << "Informe o indice inicial: ";
         cin >> indiceInicio;
+
+        while (indiceInicio < 0 or indiceInicio > qtdRegistros) {
+            cout << "Erro, digite uma posição válida: ";
+            cin >> indiceInicio;
+        }
 
         cout << "Informe o indice final: ";
         cin >> indiceFinal;
         indiceAtual = indiceInicio;
         cout << "\n";
 
-        cout << "measure, quantile, area, sex, age, geography, ethnic, value\n\n";
+        while (indiceFinal < indiceInicio or indiceFinal > qtdRegistros) {
+            cout << "Erro, digite uma posição válida: ";
+            cin >> indiceFinal;
+        }
 
         // posiciona o cursor de leitura no indice inicial escolhido pelo usuario
         arquivo.seekg(indiceInicio * sizeof(dados));
@@ -142,21 +166,25 @@ void menuImpressao(fstream& arquivo) {
         }
     }
 
-    cout << "\nDigite qualquer coisa para voltar ao menu: ";
-    cin.ignore();
-    getline(cin, buffer);
+    voltarAoMenu();
     arquivo.clear();
 }
 
-void edicao(fstream& arquivo) {
+void edicao(fstream& arquivo, int& qtdRegistros) {
     string buffer;
     int posicao;
     dados aux;
 
     limparTela();
-
-    cout << "Digite a posicao do registro que voce deseja editar: ";
+    
+    cout << "Quantidade de registros disponíveis: " << qtdRegistros << endl;
+    cout << "\nDigite a posicao do registro que voce deseja editar: ";
     cin >> posicao;
+
+    while (posicao > qtdRegistros) {
+        cout << "Erro, digite uma posição válida: ";
+        cin >> posicao;
+    }
 
     // posiciona o cursor de escrita na posição do registro a ser editado
     arquivo.seekp(posicao * sizeof(dados));
@@ -187,19 +215,25 @@ void edicao(fstream& arquivo) {
 
     arquivo.write((char*)(&aux), sizeof(dados));
 
-    cout << "\nDigite qualquer coisa para voltar ao menu: ";
-    cin.ignore();
-    getline(cin, buffer);
+    voltarAoMenu();
     arquivo.clear();
 }
 
-void insercao(fstream& arquivo) {
+void insercao(fstream& arquivo, int& qtdRegistros) {
     dados novo, aux;
     string buffer;
     int posicao;
 
-    cout << "Digite a posicao do registro que voce deseja editar: ";
+    limparTela();
+
+    cout << "Quantidade de registros disponíveis: " << qtdRegistros << "\n\n";
+    cout << "Digite a posicao onde você deseja inserir: ";
     cin >> posicao;
+
+    while (posicao > qtdRegistros) {
+        cout << "Erro, digite uma posição válida: ";
+        cin >> posicao;
+    }
 
     cout << "Digite os dados do seu novo registro\n";
     cout << "measure: ";
@@ -244,50 +278,36 @@ void insercao(fstream& arquivo) {
 
     arquivo.clear();
     
-    /*//movendo o cursor para a posicao desejada
-    arquivo.seekg(posicao * sizeof(dados));
-    //le o resto do arquivo
-    streampos tamanhoArquivo = arquivo.tellg();
-    arquivo.seekg(0, ios::end);
-    tamanhoArquivo = arquivo.tellg() - tamanhoArquivo;
-    char* arquivoRestante = new char[tamanhoArquivo];
-    arquivo.seekg(posicao * sizeof(dados));
-    arquivo.read(arquivoRestante, tamanhoArquivo);
-
-    //voltando para a posicao atualizada e escrevendo o proximo elemento
-    arquivo.seekp(posicao * sizeof(dados));
-    arquivo.write((char*)(&aux), sizeof(dados));
-    //escrevendo novamente com deslocamento de 1
-    arquivo.seekp((posicao+1) * sizeof(dados));
-    arquivo.write(arquivoRestante, tamanhoArquivo);
-
-    delete [] arquivoRestante;
-    arquivo.clear();*/
-
+    qtdRegistros++;
     cout << "Elemento adicionado com sucesso!" << endl;
-
-    cout << "\nDigite qualquer coisa para voltar ao menu: ";
-    cin.ignore();
-    getline(cin, buffer);
+    arquivo.clear();
+    voltarAoMenu();
 }
 
-void trocarDePosicao(fstream& arquivo) {
+void trocarDePosicao(fstream& arquivo, int& qtdRegistros) {
     int posicao1, posicao2;
     dados registro1, registro2;
     string buffer;
     
     limparTela();
-    cout << "Digite as posicoes dos registros que deseja trocar:\n";
+    cout << "Quantidade de registros disponíveis: " << qtdRegistros << endl;
+    cout << "\nDigite as posicoes dos registros que deseja trocar:\n";
+
     cout << "Primeira posicao:";
     cin >> posicao1;
+
+    while (posicao1 < 0 or posicao1 > qtdRegistros) {
+        cout << "Erro, digite uma posição válida: ";
+        cin >> posicao1;
+    }
+
     cout << "Segunda posicao:";
     cin >> posicao2;
 
-    if((posicao1 < 0) or (posicao2 < 0)) {
-        cerr << "Posições Invalidas!\n";
+    while (posicao2 < posicao1 or posicao2 > qtdRegistros) {
+        cout << "Erro, digite uma posição válida: ";
+        cin >> posicao2;
     }
-
-    
 
     arquivo.seekg(posicao1 * sizeof(dados));
     arquivo.read((char*)(&registro1),sizeof(dados));
@@ -302,9 +322,6 @@ void trocarDePosicao(fstream& arquivo) {
     arquivo.write((char*)(&registro1), sizeof(dados));
 
     cout << "\nTroca efetuada com sucesso!";
-    cout << "\nDigite qualquer coisa para voltar ao menu: ";
-    cin.ignore();
-    getline(cin, buffer);
     arquivo.clear();
-
+    voltarAoMenu();
 }

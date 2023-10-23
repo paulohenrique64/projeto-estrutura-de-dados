@@ -70,7 +70,7 @@ int main() {
     }
 
     cout << "Arquivo binario (.dat) gerado com sucesso!" << endl;
-    cout << "Quantidade de structs lidas do arquivo CSV: " << qtdStructsLidas << endl;
+    cout << "Quantidade de registros lidos do arquivo CSV: " << qtdStructsLidas << endl;
 
     arquivoCsv.close();
     arquivoBinario.close();
