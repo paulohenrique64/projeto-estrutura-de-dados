@@ -23,19 +23,25 @@ struct arquivo {
   dados *buffer;
 };
 
-const int N = 20000;
+const string nomeArquivoCsv = "Subnational-period-life-tables-2017-2019-CSV.csv";
 const string nomeArquivo = "arquivoBinario.dat";
+const int N = 20000;
 
 void limparTela();
 void menu();
 void voltarAoMenu();
 void imprimir(dados aux);
 int quantidadeRegistros();
+double removerPorcentagem(string numero); 
+int converterIdade(string palavra);
+void gerarArquivo();
 fstream abrirArquivo();
+
 void edicao(int &qtdRegistros);
 void trocarDePosicao(int &qtdRegistros);
 void menuImpressao(int &qtdRegistros);
 void insercao(int &qtdRegistros);
+
 void mergeSortExterno(string nome);
 int criaArquivosOrdenados(string nome);
 double removerPorcentagem(string numero);

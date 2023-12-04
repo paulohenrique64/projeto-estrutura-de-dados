@@ -10,11 +10,21 @@
 */
 
 #include <iostream>
+#include <fstream>
 #include "funcoes.hpp"
 
 using namespace std;
 
 int main() {
+
+  try {
+    abrirArquivo();
+  } catch(runtime_error& e) {
+    cout << "Arquivo binário não existe" << endl;
+    cout << "Gerando arquivo binário a partir do CSV..." << endl;
+    gerarArquivo();
+  }
+
   int opcao, qtdRegistros = quantidadeRegistros();
 
   do {
