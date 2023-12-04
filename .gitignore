@@ -1,7 +1,9 @@
-# Executables
+# não mandar os executaveis
 *.exe
 *.out
 *.app
+*.o
+*.a
 
-# .vscode
-.vscode/
+# não mandar a pasta .vscode/
+*.vscode/
