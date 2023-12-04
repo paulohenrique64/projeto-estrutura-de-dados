@@ -48,6 +48,7 @@ int criaArquivosOrdenados(string nome) {
     total = 0;
   }
 
+  delete[] vetor;
   arq.close();
   return cont;
 }
@@ -143,7 +144,7 @@ void merge(string nome, int numArqs, int k) {
   }
 
   for (int i = 0; i < numArqs; i++) {
-    delete arq[i].buffer;
+    delete[] arq[i].buffer;
   }
 
   delete[] arq;
