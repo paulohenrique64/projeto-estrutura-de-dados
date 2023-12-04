@@ -5,5 +5,8 @@
 *.o
 *.a
 
+# não mandar o arquivo binário
+*.dat
+
 # não mandar a pasta .vscode/
 *.vscode/
