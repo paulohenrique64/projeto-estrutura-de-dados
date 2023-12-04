@@ -129,14 +129,6 @@ void merge(string nome, int numArqs, int k) {
     preencheBuffer(arq[i], k);
   }
 
-  for (int i = 0; i < numArqs; i++) {
-    if(arq[i].arq.is_open()) {
-      cout << "check\n";
-    } else  {
-      cout << "error\n";
-    }
-  }
-
   while (procuraMaior(arq, numArqs, k, menor) == 1) {
     buffer[qtdBuffer] = menor;
     qtdBuffer++;

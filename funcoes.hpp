@@ -25,7 +25,7 @@ struct arquivo {
 
 const string nomeArquivoCsv = "Subnational-period-life-tables-2017-2019-CSV.csv";
 const string nomeArquivo = "arquivoBinario.dat";
-const int N = 20000;
+const int N = 35000;
 
 void limparTela();
 void menu();

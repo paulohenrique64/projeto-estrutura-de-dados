@@ -6,7 +6,6 @@ void gerarArquivo() {
   string cabecalho, linha, palavras[8];
   stringstream buffer;
   dados aux;
-  int qtdStructsLidas = 0;
 
   // cabecalho
   getline(arquivoCsv, cabecalho);
@@ -38,8 +37,6 @@ void gerarArquivo() {
 
       // escrever struct lida no arquivo binario
       arquivoBinario.write(reinterpret_cast<char*>(&aux), sizeof(dados));
-
-      qtdStructsLidas++;
     }
 
   arquivoCsv.close();
@@ -119,15 +116,18 @@ void voltarAoMenu() {
 }
 
 int quantidadeRegistros() {
+  int qtdRegistros = -1;
+
   try {
     fstream arquivo = abrirArquivo();  
     arquivo.seekg(0, ios_base::end);
-    return arquivo.tellg() / sizeof(dados);
+    qtdRegistros = arquivo.tellg() / sizeof(dados);
+    arquivo.close();
   } catch (runtime_error& e) {
     cerr << e.what() << endl;
   }
 
-  return -1;
+  return qtdRegistros;
 }
 
 void menuImpressao(int &qtdRegistros) {
@@ -137,7 +137,7 @@ void menuImpressao(int &qtdRegistros) {
   fstream arquivo;  
 
   try {
-    fstream arquivo = abrirArquivo();  
+    arquivo = abrirArquivo();  
   } catch (runtime_error& e) {
     cerr << e.what() << endl;
     return;
@@ -206,7 +206,7 @@ void edicao(int &qtdRegistros) {
   fstream arquivo;  
 
   try {
-    fstream arquivo = abrirArquivo();  
+    arquivo = abrirArquivo();  
   } catch (runtime_error& e) {
     cerr << e.what() << endl;
     return;
@@ -264,7 +264,7 @@ void insercao(int &qtdRegistros) {
   fstream arquivo;  
 
   try {
-    fstream arquivo = abrirArquivo();  
+    arquivo = abrirArquivo();  
   } catch (runtime_error& e) {
     cerr << e.what() << endl;
     return;
@@ -338,7 +338,7 @@ void trocarDePosicao(int &qtdRegistros) {
   fstream arquivo;  
 
   try {
-    fstream arquivo = abrirArquivo();  
+    arquivo = abrirArquivo();  
   } catch (runtime_error& e) {
     cerr << e.what() << endl;
     return;
